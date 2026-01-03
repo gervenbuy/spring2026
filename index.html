@@ -1,0 +1,493 @@
+import React, { useState, useEffect } from 'react';
+import { MapPin, Calendar, Clock, Tent, Truck, Sparkles, Utensils, AlertCircle, CheckCircle, Image as ImageIcon, Upload } from 'lucide-react';
+
+export default function App() {
+    const [formData, setFormData] = useState({
+        brandName: '',
+        items: '',
+        category: '',
+        subOption: '',
+        contactName: '',
+        phone: '',
+        line: '',
+        email: '',
+        agree: false
+    });
+
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [priceInfo, setPriceInfo] = useState({ price: 0, deposit: 0, note: '' });
+
+    // Pricing Logic
+    useEffect(() => {
+        let info = { price: 0, deposit: 0, note: '請選擇攤位類型以查看費用' };
+        
+        switch(formData.category) {
+            case 'food':
+                info = { price: 18000, deposit: 5000, note: '含3米帳篷、2000W電力、垃圾分類集中' };
+                break;
+            case 'souvenir':
+                info = { price: 12000, deposit: 5000, note: '含3米帳篷、2000W電力、垃圾分類集中' };
+                break;
+            case 'truck':
+                info = { price: 12000, deposit: 0, note: '含2000W電力、垃圾分類集中' };
+                break;
+            case 'creative':
+                info = { price: 0, deposit: 0, note: '需自備設備（白色陽傘/桌布）' };
+                if (formData.subOption === 'A') info = { ...info, price: 3200, note: info.note + ' | 選項一：2/17-2/19' };
+                if (formData.subOption === 'B') info = { ...info, price: 2500, note: info.note + ' | 選項二：2/20-2/22' };
+                if (formData.subOption === 'C') info = { ...info, price: 5000, note: info.note + ' | 選項三：2/17-2/22 (全展期)' };
+                break;
+            default:
+                break;
+        }
+        setPriceInfo(info);
+    }, [formData.category, formData.subOption]);
+
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData(prev => ({ 
+            ...prev, 
+            [name]: type === 'checkbox' ? checked : value 
+        }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Simulation of form submission
+        console.log("Form Data Submitted:", formData);
+        setShowSuccess(true);
+    };
+
+    return (
+        <div className="min-h-screen bg-stone-50 text-stone-800 font-sans">
+            {/* Inject Fonts & Custom Styles */}
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap');
+                .font-serif-tc { font-family: 'Noto Serif TC', serif; }
+                .font-sans-tc { font-family: 'Noto Sans TC', sans-serif; }
+                .bg-pattern {
+                    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d97706' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+                }
+            `}</style>
+
+            <div className="bg-pattern min-h-screen">
+                {/* Navigation / Header */}
+                <nav className="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-stone-200 shadow-sm">
+                    <div className="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+                        <div className="font-bold text-xl tracking-wider text-red-800 flex items-center gap-2">
+                            <span className="bg-red-800 text-white p-1 rounded font-sans-tc">2026</span>
+                            <span className="hidden sm:inline font-sans-tc">台南河樂廣場年節市集</span>
+                            <span className="sm:hidden font-sans-tc">河樂年節市集</span>
+                        </div>
+                        <a href="#register" className="bg-red-700 hover:bg-red-800 text-white px-6 py-2 rounded-full text-sm font-medium transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 font-sans-tc">
+                            立即報名
+                        </a>
+                    </div>
+                </nav>
+
+                {/* Hero Section */}
+                <header className="relative w-full h-[60vh] min-h-[500px] bg-stone-900 overflow-hidden flex items-center justify-center">
+                    <img 
+                        src="https://i.meee.com.tw/x2kyjbc.png" 
+                        alt="河樂廣場氛圍" 
+                        className="absolute inset-0 w-full h-full object-cover opacity-60"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-transparent to-transparent"></div>
+                    
+                    <div className="relative z-10 text-center px-4 max-w-4xl mx-auto mt-10">
+                        <div className="inline-block border border-yellow-500/50 bg-black/30 backdrop-blur-sm px-4 py-1 rounded-full text-yellow-400 mb-4 text-sm tracking-widest font-sans-tc">
+                            2026 LUNAR NEW YEAR MARKET
+                        </div>
+                        <h1 className="font-serif-tc text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
+                            2026 台南河樂廣場<br/>
+                            <span className="text-yellow-500">年節市集</span>
+                        </h1>
+                        <p className="text-stone-200 text-lg md:text-xl font-light mb-8 max-w-2xl mx-auto font-sans-tc">
+                            城市中心的絕美水岸，邀您共度初一至初六的熱鬧時光。
+                        </p>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto text-white font-sans-tc">
+                            <div className="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20 flex flex-col items-center">
+                                <Calendar className="w-6 h-6 text-yellow-400 mb-2" />
+                                <span className="font-bold text-lg">2/17 - 2/22</span>
+                                <span className="text-sm opacity-80">初一至初六</span>
+                            </div>
+                            <div className="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20 flex flex-col items-center">
+                                <Clock className="w-6 h-6 text-yellow-400 mb-2" />
+                                <span className="font-bold text-lg">10:00 - 20:00</span>
+                                <span className="text-sm opacity-80">每日營業</span>
+                            </div>
+                            <div className="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/20 flex flex-col items-center">
+                                <MapPin className="w-6 h-6 text-yellow-400 mb-2" />
+                                <span className="font-bold text-lg">台南河樂廣場</span>
+                                <span className="text-xs opacity-80 text-center">中西區中正路343-20號</span>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                {/* Vendor Categories */}
+                <section className="py-20 px-4 max-w-6xl mx-auto font-sans-tc">
+                    <div className="text-center mb-12">
+                        <h2 className="font-serif-tc text-3xl font-bold text-stone-800 mb-4">招商類別與費用</h2>
+                        <div className="w-20 h-1 bg-red-700 mx-auto"></div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {/* Card 1 */}
+                        <div className="bg-white rounded-2xl shadow-lg border border-stone-100 overflow-hidden hover:shadow-xl transition-shadow group">
+                            <div className="bg-red-50 p-6 flex flex-col items-center border-b border-red-100">
+                                <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-3 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                                    <Utensils className="w-6 h-6" />
+                                </div>
+                                <h3 className="text-xl font-bold text-stone-800">美食攤位</h3>
+                            </div>
+                            <div className="p-6">
+                                <div className="mb-4">
+                                    <span className="text-2xl font-bold text-red-700">$18,000</span>
+                                    <span className="text-sm text-stone-500"> / 6天</span>
+                                    <div className="text-xs text-stone-400 mt-1">+ $5,000 保證金</div>
+                                </div>
+                                <ul className="text-sm text-stone-600 space-y-2">
+                                    <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0"/> 提供3米帳篷</li>
+                                    <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0"/> 提供2000W電力</li>
+                                    <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0"/> 垃圾分類集中</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        {/* Card 2 */}
+                        <div className="bg-white rounded-2xl shadow-lg border border-stone-100 overflow-hidden hover:shadow-xl transition-shadow group">
+                            <div className="bg-amber-50 p-6 flex flex-col items-center border-b border-amber-100">
+                                <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mb-3 group-hover:bg-amber-600 group-hover:text-white transition-colors">
+                                    <Tent className="w-6 h-6" />
+                                </div>
+                                <h3 className="text-xl font-bold text-stone-800">伴手禮/小物</h3>
+                            </div>
+                            <div className="p-6">
+                                <div className="mb-4">
+                                    <span className="text-2xl font-bold text-amber-700">$12,000</span>
+                                    <span className="text-sm text-stone-500"> / 6天</span>
+                                    <div className="text-xs text-stone-400 mt-1">+ $5,000 保證金</div>
+                                </div>
+                                <ul className="text-sm text-stone-600 space-y-2">
+                                    <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0"/> 提供3米帳篷</li>
+                                    <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0"/> 提供2000W電力</li>
+                                    <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0"/> 垃圾分類集中</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        {/* Card 3 */}
+                        <div className="bg-white rounded-2xl shadow-lg border border-stone-100 overflow-hidden hover:shadow-xl transition-shadow group">
+                            <div className="bg-blue-50 p-6 flex flex-col items-center border-b border-blue-100">
+                                <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-3 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                    <Truck className="w-6 h-6" />
+                                </div>
+                                <h3 className="text-xl font-bold text-stone-800">胖卡餐車</h3>
+                            </div>
+                            <div className="p-6">
+                                <div className="mb-4">
+                                    <span className="text-2xl font-bold text-blue-700">$12,000</span>
+                                    <span className="text-sm text-stone-500"> / 6天</span>
+                                    <div className="text-xs text-stone-400 mt-1">免保證金</div>
+                                </div>
+                                <ul className="text-sm text-stone-600 space-y-2">
+                                    <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0"/> 提供2000W電力</li>
+                                    <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0"/> 垃圾分類集中</li>
+                                    <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0"/> 需自備車輛</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                            {/* Card 4 */}
+                            <div className="bg-white rounded-2xl shadow-lg border border-stone-100 overflow-hidden hover:shadow-xl transition-shadow group">
+                            <div className="bg-purple-50 p-6 flex flex-col items-center border-b border-purple-100">
+                                <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mb-3 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                                    <Sparkles className="w-6 h-6" />
+                                </div>
+                                <h3 className="text-xl font-bold text-stone-800">文創手作</h3>
+                            </div>
+                            <div className="p-6">
+                                <div className="mb-4">
+                                    <span className="text-xl font-bold text-purple-700">$2,500 起</span>
+                                    <div className="text-xs text-stone-400 mt-1">方案三選一</div>
+                                </div>
+                                <div className="bg-purple-50 rounded p-3 mb-3">
+                                    <p className="text-xs text-purple-800 font-bold mb-1">自備設備：白色陽傘/桌布</p>
+                                </div>
+                                <ul className="text-xs text-stone-600 space-y-2 border-t pt-2">
+                                    <li className="flex justify-between">
+                                        <span>(一) 2/17-19</span>
+                                        <span className="font-bold">$3,200</span>
+                                    </li>
+                                    <li className="flex justify-between">
+                                        <span>(二) 2/20-22</span>
+                                        <span className="font-bold">$2,500</span>
+                                    </li>
+                                    <li className="flex justify-between text-purple-700 font-medium">
+                                        <span>(三) 2/17-22 (全)</span>
+                                        <span className="font-bold">$5,000</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Map & Location */}
+                <section className="bg-stone-100 py-16 font-sans-tc">
+                    <div className="max-w-5xl mx-auto px-4">
+                        <div className="flex flex-col md:flex-row gap-8 items-start">
+                            <div className="w-full md:w-1/3">
+                                <h2 className="font-serif-tc text-3xl font-bold text-stone-800 mb-6">活動地圖</h2>
+                                <div className="bg-white p-6 rounded-xl shadow-sm mb-6">
+                                    <h4 className="font-bold text-lg mb-2 flex items-center gap-2">
+                                        <MapPin className="text-red-600" />
+                                        河樂廣場 The Spring
+                                    </h4>
+                                    <p className="text-stone-600 mb-4">700臺南市中西區中正路343-20號</p>
+                                    <div className="h-px bg-stone-200 my-4"></div>
+                                    <h4 className="font-bold text-sm mb-2 text-stone-800">攤位配置說明</h4>
+                                    <p className="text-sm text-stone-500 leading-relaxed">
+                                        本場域為下沉式廣場，親水環境優美。請參考右側平面圖。<br/>
+                                        <span className="text-red-600 font-medium">*注意：</span> 
+                                        地圖中<span className="bg-yellow-200 px-1 rounded text-stone-800">黃色區塊</span>與
+                                        <span className="text-red-600 font-bold">紅色字體</span>
+                                        標示為本次活動的規劃區域位置。
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="w-full md:w-2/3">
+                                <div className="bg-white p-2 rounded-xl shadow-lg rotate-1 hover:rotate-0 transition-transform duration-300">
+                                    {/* Map Image Section */}
+                                    <div className="aspect-[4/3] bg-stone-200 rounded-lg overflow-hidden relative group">
+                                        <img 
+                                            src="https://i.meee.com.tw/0PJ5VXn.png" 
+                                            alt="活動配置圖" 
+                                            className="w-full h-full object-contain bg-stone-800"
+                                        />
+                                    </div>
+                                    <p className="text-center text-xs text-stone-400 mt-2">示意圖：實際位置請以主辦單位最終公告為主</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Registration Form */}
+                <section id="register" className="py-20 px-4 bg-white relative font-sans-tc">
+                    <div className="max-w-3xl mx-auto">
+                        <div className="text-center mb-10">
+                            <span className="text-red-600 font-bold tracking-widest text-sm uppercase">Application</span>
+                            <h2 className="font-serif-tc text-4xl font-bold text-stone-900 mt-2">攤商報名表</h2>
+                            <p className="text-stone-500 mt-4">請詳細填寫以下資訊，錄取者將於 Email 或 Line 通知拉群。</p>
+                        </div>
+
+                        <form onSubmit={handleSubmit} className="space-y-8">
+                            {/* Basic Info */}
+                            <div className="bg-stone-50 p-6 md:p-8 rounded-2xl border border-stone-200 shadow-sm">
+                                <h3 className="font-bold text-xl text-stone-800 mb-6 flex items-center gap-2">
+                                    <div className="w-1 h-6 bg-red-600 rounded-full"></div>
+                                    基本資料
+                                </h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="md:col-span-2">
+                                        <label className="block text-sm font-medium text-stone-700 mb-2">品牌名稱</label>
+                                        <input 
+                                            type="text" 
+                                            name="brandName"
+                                            required
+                                            value={formData.brandName}
+                                            className="w-full px-4 py-3 rounded-lg border border-stone-300 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition"
+                                            placeholder="請輸入您的品牌名稱"
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="md:col-span-2">
+                                        <label className="block text-sm font-medium text-stone-700 mb-2">販售項目</label>
+                                        <textarea 
+                                            name="items"
+                                            required
+                                            rows="3"
+                                            value={formData.items}
+                                            className="w-full px-4 py-3 rounded-lg border border-stone-300 focus:ring-2 focus:ring-red-500 focus:border-red-500 transition"
+                                            placeholder="請描述您的販售商品內容"
+                                            onChange={handleChange}
+                                        ></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Category Selection */}
+                            <div className="bg-stone-50 p-6 md:p-8 rounded-2xl border border-stone-200 shadow-sm">
+                                <h3 className="font-bold text-xl text-stone-800 mb-6 flex items-center gap-2">
+                                    <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
+                                    報名選項
+                                </h3>
+                                
+                                <div className="space-y-4">
+                                    <label className={`block p-4 rounded-xl border-2 cursor-pointer transition-all ${formData.category === 'food' ? 'border-red-500 bg-red-50' : 'border-stone-200 hover:border-stone-300'}`}>
+                                        <div className="flex items-center gap-3">
+                                            <input type="radio" name="category" value="food" className="w-5 h-5 text-red-600" onChange={handleChange} checked={formData.category === 'food'} />
+                                            <span className="font-bold text-stone-800">1. 美食攤位</span>
+                                        </div>
+                                    </label>
+
+                                    <label className={`block p-4 rounded-xl border-2 cursor-pointer transition-all ${formData.category === 'souvenir' ? 'border-amber-500 bg-amber-50' : 'border-stone-200 hover:border-stone-300'}`}>
+                                        <div className="flex items-center gap-3">
+                                            <input type="radio" name="category" value="souvenir" className="w-5 h-5 text-amber-600" onChange={handleChange} checked={formData.category === 'souvenir'} />
+                                            <span className="font-bold text-stone-800">2. 年節伴手禮 / 小物</span>
+                                        </div>
+                                    </label>
+
+                                    <label className={`block p-4 rounded-xl border-2 cursor-pointer transition-all ${formData.category === 'truck' ? 'border-blue-500 bg-blue-50' : 'border-stone-200 hover:border-stone-300'}`}>
+                                        <div className="flex items-center gap-3">
+                                            <input type="radio" name="category" value="truck" className="w-5 h-5 text-blue-600" onChange={handleChange} checked={formData.category === 'truck'} />
+                                            <span className="font-bold text-stone-800">3. 胖卡餐車</span>
+                                        </div>
+                                    </label>
+
+                                    <label className={`block p-4 rounded-xl border-2 cursor-pointer transition-all ${formData.category === 'creative' ? 'border-purple-500 bg-purple-50' : 'border-stone-200 hover:border-stone-300'}`}>
+                                        <div className="flex items-center gap-3">
+                                            <input type="radio" name="category" value="creative" className="w-5 h-5 text-purple-600" onChange={handleChange} checked={formData.category === 'creative'} />
+                                            <span className="font-bold text-stone-800">4. 文創手作 (需自備設備)</span>
+                                        </div>
+                                        
+                                        {/* Sub Options for Creative */}
+                                        {formData.category === 'creative' && (
+                                            <div className="mt-4 ml-8 space-y-3 p-4 bg-white/50 rounded-lg animate-fade-in">
+                                                <p className="text-sm font-bold text-purple-800 mb-2">請選擇擺攤日期：</p>
+                                                <label className="flex items-center gap-2 cursor-pointer">
+                                                    <input type="radio" name="subOption" value="A" className="text-purple-600" onChange={handleChange} checked={formData.subOption === 'A'} required />
+                                                    <span className="text-sm">（一）2/17～2/19 ($3200)</span>
+                                                </label>
+                                                <label className="flex items-center gap-2 cursor-pointer">
+                                                    <input type="radio" name="subOption" value="B" className="text-purple-600" onChange={handleChange} checked={formData.subOption === 'B'} required />
+                                                    <span className="text-sm">（二）2/20～2/22 ($2500)</span>
+                                                </label>
+                                                <label className="flex items-center gap-2 cursor-pointer">
+                                                    <input type="radio" name="subOption" value="C" className="text-purple-600" onChange={handleChange} checked={formData.subOption === 'C'} required />
+                                                    <span className="text-sm">（三）2/17～2/22 全展期 ($5000)</span>
+                                                </label>
+                                            </div>
+                                        )}
+                                    </label>
+                                </div>
+                                
+                                {/* Price Display */}
+                                <div className="mt-6 p-4 bg-stone-800 text-stone-200 rounded-lg flex justify-between items-center">
+                                    <span className="text-sm">預估費用說明</span>
+                                    <div className="text-right">
+                                        <div className="text-2xl font-bold text-yellow-400">
+                                            ${priceInfo.price.toLocaleString()} 
+                                            {priceInfo.deposit > 0 && <span className="text-sm font-normal text-stone-400"> + ${priceInfo.deposit.toLocaleString()} 保證金</span>}
+                                        </div>
+                                        <div className="text-xs text-stone-400 mt-1">{priceInfo.note}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Contact & Upload */}
+                            <div className="bg-stone-50 p-6 md:p-8 rounded-2xl border border-stone-200 shadow-sm">
+                                <h3 className="font-bold text-xl text-stone-800 mb-6 flex items-center gap-2">
+                                    <div className="w-1 h-6 bg-stone-600 rounded-full"></div>
+                                    聯絡資訊與附件
+                                </h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label className="block text-sm font-medium text-stone-700 mb-2">負責人姓名</label>
+                                        <input type="text" name="contactName" required value={formData.contactName} onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-stone-300 focus:ring-2 focus:ring-stone-500 transition" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-stone-700 mb-2">電話</label>
+                                        <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-stone-300 focus:ring-2 focus:ring-stone-500 transition" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-stone-700 mb-2">Line ID</label>
+                                        <input type="text" name="line" required value={formData.line} onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-stone-300 focus:ring-2 focus:ring-stone-500 transition" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-stone-700 mb-2">Email</label>
+                                        <input type="email" name="email" required value={formData.email} onChange={handleChange} className="w-full px-4 py-3 rounded-lg border border-stone-300 focus:ring-2 focus:ring-stone-500 transition" />
+                                    </div>
+                                    
+                                    <div className="md:col-span-2">
+                                        <label className="block text-sm font-medium text-stone-700 mb-2">攤位照片 (請上傳2張)</label>
+                                        <div className="border-2 border-dashed border-stone-300 rounded-lg p-8 text-center hover:border-red-500 hover:bg-red-50 transition cursor-pointer group">
+                                            <Upload className="w-8 h-8 mx-auto text-stone-400 group-hover:text-red-500 mb-2" />
+                                            <p className="text-sm text-stone-500 group-hover:text-red-600">點擊選擇檔案 或 拖曳至此</p>
+                                            <input type="file" className="hidden" multiple accept="image/*" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Rules */}
+                            <div className="bg-red-50 border border-red-100 p-6 rounded-xl text-sm text-stone-600 space-y-3">
+                                <h4 className="font-bold text-red-800 text-base mb-2 flex items-center gap-2">
+                                    <AlertCircle className="w-5 h-5"/>
+                                    報名須知與規範
+                                </h4>
+                                <ol className="list-decimal pl-5 space-y-1">
+                                    <li>錄取者將於 Email 或 Line 通知拉群，未錄取者不另行通知。</li>
+                                    <li>未依開收攤時間進出場，每日扣除 $1000 保證金。未使用暗火規定，保證金不歸還。</li>
+                                    <li>請於每日 10:00 開攤完成，20:00 方始自由離場。</li>
+                                    <li>除上述提供項目外，未提供其他設備、器具及耗材，均由攤友自行準備並負責安全與保管。</li>
+                                    <li>場地需恢復原狀，無違規者於活動結束 5 日內退回保證金。</li>
+                                    <li>每日場地需恢復原狀，可原地封攤，主辦方不負保管責任。</li>
+                                    <li>食物工作者請佩戴口罩，地面鋪設防汙墊，如有破壞/弄髒場地情形，相關賠償由報名者承擔。</li>
+                                    <li>車輛不得駛入人行道及步道。</li>
+                                </ol>
+                                <div className="pt-4 flex items-start gap-3">
+                                    <input 
+                                        type="checkbox" 
+                                        name="agree"
+                                        required 
+                                        checked={formData.agree}
+                                        onChange={handleChange}
+                                        className="mt-1 w-4 h-4 text-red-600 focus:ring-red-500 border-gray-300 rounded" 
+                                    />
+                                    <label className="text-stone-800 font-medium">我已詳閱並同意上述規範</label>
+                                </div>
+                            </div>
+
+                            <button type="submit" className="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 text-lg">
+                                提交報名申請
+                            </button>
+                        </form>
+                    </div>
+                </section>
+
+                {/* Success Modal */}
+                {showSuccess && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+                        <div className="bg-white rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl scale-100 animate-pop-in">
+                            <div className="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <CheckCircle className="w-8 h-8" />
+                            </div>
+                            <h3 className="text-2xl font-bold text-stone-800 mb-2">報名成功！</h3>
+                            <p className="text-stone-600 mb-6">我們已收到您的申請資料。錄取通知將稍後透過 Email 或 Line 發送。</p>
+                            <button 
+                                onClick={() => setShowSuccess(false)}
+                                className="w-full bg-stone-800 text-white font-bold py-3 rounded-lg hover:bg-stone-900 transition"
+                            >
+                                好的，我知道了
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* Footer */}
+                <footer className="bg-stone-900 text-stone-400 py-12 text-center text-sm font-sans-tc">
+                    <div className="max-w-4xl mx-auto px-4">
+                        <h2 className="font-serif-tc text-2xl text-white font-bold mb-4">2026 台南河樂廣場年節市集</h2>
+                        <p className="mb-8">期待與您在美麗的水岸共度佳節</p>
+                        <div className="w-full h-px bg-stone-800 mb-8"></div>
+                        <p>© 2026 Powered by 電商神助手. All Rights Reserved.</p>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    );
+}
